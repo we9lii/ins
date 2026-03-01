@@ -71,15 +71,14 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-        className="w-full max-w-sm md:max-w-md bg-white/80 backdrop-blur-xl rounded-2xl md:rounded-3xl shadow-2xl border border-white/20 p-6 md:p-8 relative z-10"
+        className="w-full max-w-sm md:max-w-md bg-white/80 backdrop-blur-xl rounded-2xl md:rounded-3xl shadow-2xl border border-white/20 p-4 sm:p-6 md:p-8 relative z-10"
       >
-        <div className="flex flex-col items-center mb-6 md:mb-10">
+        <div className="flex flex-col items-center mb-4 md:mb-10">
           <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.2 }}
-            className="w-32 h-16 md:w-48 md:h-24 mb-4 md:mb-6 relative"
+            className="w-24 h-12 mb-2 sm:w-32 sm:h-16 md:w-48 md:h-24 md:mb-6 relative"
           >
             <img
               src="https://i.postimg.cc/jq8ngP2f/An.png"
@@ -92,7 +91,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="text-2xl md:text-3xl font-bold text-slate-800 mb-1 md:mb-2 font-sans text-center"
+            className="text-xl sm:text-2xl md:text-3xl font-bold text-slate-800 mb-1 md:mb-2 font-sans text-center"
           >
             نظام المصروفات العمومية و الإدارية
           </motion.h1>
@@ -106,7 +105,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
           </motion.p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-3 md:space-y-6">
           <AnimatePresence mode="wait">
             {error && (
               <motion.div
@@ -137,7 +136,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="w-full pl-3 md:pl-4 pr-10 md:pr-12 py-3 md:py-4 bg-slate-50/50 border border-slate-200 rounded-xl md:rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 transition-all text-slate-700 placeholder:text-slate-400 text-sm md:text-base"
+                    className="w-full pl-3 md:pl-4 pr-10 md:pr-12 py-2.5 md:py-4 bg-slate-50/50 border border-slate-200 rounded-xl md:rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 transition-all text-slate-700 placeholder:text-slate-400 text-sm md:text-base"
                     placeholder="الاسم الكامل"
                     dir="rtl"
                   />
@@ -158,7 +157,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="w-full pl-3 md:pl-4 pr-10 md:pr-12 py-3 md:py-4 bg-slate-50/50 border border-slate-200 rounded-xl md:rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 transition-all text-slate-700 placeholder:text-slate-400 text-sm md:text-base"
+                className="w-full pl-3 md:pl-4 pr-10 md:pr-12 py-2.5 md:py-4 bg-slate-50/50 border border-slate-200 rounded-xl md:rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 transition-all text-slate-700 placeholder:text-slate-400 text-sm md:text-base"
                 placeholder="اسم المستخدم"
                 dir="ltr"
               />
@@ -177,7 +176,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full pl-3 md:pl-4 pr-10 md:pr-12 py-3 md:py-4 bg-slate-50/50 border border-slate-200 rounded-xl md:rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 transition-all text-slate-700 placeholder:text-slate-400 text-sm md:text-base"
+                className="w-full pl-3 md:pl-4 pr-10 md:pr-12 py-2.5 md:py-4 bg-slate-50/50 border border-slate-200 rounded-xl md:rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 transition-all text-slate-700 placeholder:text-slate-400 text-sm md:text-base"
                 placeholder="كلمة المرور"
                 dir="rtl"
               />
@@ -209,7 +208,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
             transition={{ delay: 0.8 }}
             type="submit"
             disabled={isLoading}
-            className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 md:py-4 rounded-xl md:rounded-2xl font-bold text-base md:text-lg shadow-lg shadow-blue-600/30 hover:shadow-blue-600/50 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none mt-2"
+            className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-2.5 md:py-4 rounded-xl md:rounded-2xl font-bold text-sm md:text-lg shadow-lg shadow-blue-600/30 hover:shadow-blue-600/50 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none mt-2"
           >
             {isLoading ? (
               <Loader2 className="animate-spin" size={20} />
@@ -244,7 +243,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1 }}
-          className="mt-6 md:mt-8 text-center text-xs md:text-sm text-slate-400"
+          className="mt-4 md:mt-8 text-center text-[10px] md:text-sm text-slate-400"
         >
           <p>نظام داخلي لإدارة العهد والمصروفات © 2026</p>
         </motion.div>
