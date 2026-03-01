@@ -9,7 +9,7 @@ interface LoginScreenProps {
 export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
   const [isLogin, setIsLogin] = useState(true);
   const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -17,8 +17,8 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    
-    if (!email || !password || (!isLogin && !name)) {
+
+    if (!username || !password || (!isLogin && !name)) {
       setError('يرجى إدخال جميع الحقول المطلوبة');
       return;
     }
@@ -27,7 +27,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
 
     try {
       const endpoint = isLogin ? '/api/auth/login' : '/api/auth/register';
-      const body = isLogin ? { email, password } : { name, email, password };
+      const body = isLogin ? { email: username, password } : { name, email: username, password };
 
       const response = await fetch(endpoint, {
         method: 'POST',
@@ -55,48 +55,48 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col justify-center items-center p-4 relative overflow-hidden" dir="rtl">
       {/* Background decorative elements */}
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 1.5, ease: "easeOut" }}
         className="absolute top-[-10%] left-[-10%] w-64 h-64 md:w-96 md:h-96 bg-blue-400/20 rounded-full blur-3xl"
       />
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 1.5, ease: "easeOut", delay: 0.2 }}
         className="absolute bottom-[-10%] right-[-10%] w-64 h-64 md:w-96 md:h-96 bg-indigo-400/20 rounded-full blur-3xl"
       />
 
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
         className="w-full max-w-sm md:max-w-md bg-white/80 backdrop-blur-xl rounded-2xl md:rounded-3xl shadow-2xl border border-white/20 p-6 md:p-8 relative z-10"
       >
         <div className="flex flex-col items-center mb-6 md:mb-10">
-          <motion.div 
+          <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.2 }}
-            className="w-24 h-24 md:w-32 md:h-32 mb-4 md:mb-6 relative"
+            className="w-32 h-16 md:w-48 md:h-24 mb-4 md:mb-6 relative"
           >
-            <img 
-              src="https://i.postimg.cc/PxbJJLgp/An.png" 
-              alt="شعار النظام" 
+            <img
+              src="https://i.postimg.cc/jq8ngP2f/An.png"
+              alt="شعار النظام"
               className="w-full h-full object-contain relative z-10 drop-shadow-md p-2"
               referrerPolicy="no-referrer"
             />
           </motion.div>
-          <motion.h1 
+          <motion.h1
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
             className="text-2xl md:text-3xl font-bold text-slate-800 mb-1 md:mb-2 font-sans text-center"
           >
-            نظام المصروفات اللحظية
+            نظام المصروفات العمومية و الإدارية
           </motion.h1>
-          <motion.p 
+          <motion.p
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
@@ -109,7 +109,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
         <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
           <AnimatePresence mode="wait">
             {error && (
-              <motion.div 
+              <motion.div
                 key="error"
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
@@ -124,7 +124,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
           <div className="space-y-3 md:space-y-4">
             <AnimatePresence>
               {!isLogin && (
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0, height: 0, overflow: 'hidden' }}
                   animate={{ opacity: 1, height: 'auto', overflow: 'visible' }}
                   exit={{ opacity: 0, height: 0, overflow: 'hidden' }}
@@ -145,26 +145,26 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
               )}
             </AnimatePresence>
 
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.5 }}
               className="relative group"
             >
               <div className="absolute inset-y-0 right-0 pr-3 md:pr-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-blue-600 transition-colors">
-                <Mail size={18} className="md:w-5 md:h-5" />
+                <User size={18} className="md:w-5 md:h-5" />
               </div>
               <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
                 className="w-full pl-3 md:pl-4 pr-10 md:pr-12 py-3 md:py-4 bg-slate-50/50 border border-slate-200 rounded-xl md:rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 transition-all text-slate-700 placeholder:text-slate-400 text-sm md:text-base"
-                placeholder="البريد الإلكتروني"
-                dir="rtl"
+                placeholder="اسم المستخدم"
+                dir="ltr"
               />
             </motion.div>
 
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.6 }}
@@ -184,7 +184,7 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
             </motion.div>
           </div>
 
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.7 }}
@@ -220,15 +220,15 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
               </>
             )}
           </motion.button>
-          
-          <motion.div 
+
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.9 }}
             className="text-center"
           >
-            <button 
-              type="button" 
+            <button
+              type="button"
               onClick={() => {
                 setIsLogin(!isLogin);
                 setError('');
@@ -239,8 +239,8 @@ export const LoginScreen: React.FC<LoginScreenProps> = ({ onLogin }) => {
             </button>
           </motion.div>
         </form>
-        
-        <motion.div 
+
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1 }}

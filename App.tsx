@@ -10,7 +10,8 @@ import { SheetHeader } from './components/SheetHeader';
 import { ExpenseTable } from './components/ExpenseTable';
 import { ToastContainer, ToastMessage, ToastType } from './components/Toast';
 import { LoginScreen } from './components/LoginScreen';
-import { Filter, GripHorizontal, FileText, Menu, X, LogOut } from 'lucide-react';
+import { UserManagement } from './components/UserManagement';
+import { Filter, GripHorizontal, FileText, Menu, X, LogOut, Shield } from 'lucide-react';
 
 const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -19,15 +20,16 @@ const App: React.FC = () => {
   const [activeSheet, setActiveSheet] = useState<Sheet | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [filterReason, setFilterReason] = useState<ExpenseReason | 'ALL'>('ALL');
-  
+  const [currentView, setCurrentView] = useState<'sheets' | 'users'>('sheets');
+
   // Mobile UI State
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  
+
   // Toast State
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
 
   // Resizable Notes State
-  const [notesHeight, setNotesHeight] = useState(100); 
+  const [notesHeight, setNotesHeight] = useState(100);
   const isResizing = useRef(false);
 
   // Initial Load
@@ -42,8 +44,8 @@ const App: React.FC = () => {
     if (isAuthenticated) {
       loadSheets();
       const interval = setInterval(async () => {
-          const status = await checkHealth();
-          setIsOnline(status);
+        const status = await checkHealth();
+        setIsOnline(status);
       }, 15000);
       return () => clearInterval(interval);
     }
@@ -53,8 +55,8 @@ const App: React.FC = () => {
     const data = await getSheets();
     setSheets(data);
     if (activeSheet) {
-        const updated = data.find(s => s.id === activeSheet.id);
-        if (updated) setActiveSheet(updated);
+      const updated = data.find(s => s.id === activeSheet.id);
+      if (updated) setActiveSheet(updated);
     }
   };
 
@@ -79,7 +81,7 @@ const App: React.FC = () => {
   const handleCreateSheet = () => {
     const userInfoStr = localStorage.getItem('user_info');
     const userInfo = userInfoStr ? JSON.parse(userInfoStr) : DEFAULT_USER;
-    
+
     const newSheet = createNewSheet(`عهدة جديدة ${sheets.length + 1}`, 0, userInfo.id);
     setActiveSheet(newSheet);
     showToast('تم إنشاء مسودة عهدة جديدة', 'success');
@@ -90,6 +92,7 @@ const App: React.FC = () => {
     setActiveSheet(sheet);
     setFilterReason('ALL');
     setIsSidebarOpen(false); // Close sidebar on mobile
+    setCurrentView('sheets'); // Ensure view switches back to sheets
   };
 
   const handleUpdateSheetHeader = (updated: Sheet) => {
@@ -100,54 +103,75 @@ const App: React.FC = () => {
     if (!activeSheet) return;
     setIsSaving(true);
     try {
-        const saved = await saveSheet(activeSheet);
-        await loadSheets();
-        setActiveSheet(saved);
-        showToast('تم حفظ العهدة بنجاح');
+      const saved = await saveSheet(activeSheet);
+      await loadSheets();
+      setActiveSheet(saved);
+      showToast('تم حفظ العهدة بنجاح');
     } catch (error) {
-        console.error("Save failed", error);
-        showToast('فشل الحفظ. يرجى التحقق من الاتصال.', 'error');
+      console.error("Save failed", error);
+      showToast('فشل الحفظ. يرجى التحقق من الاتصال.', 'error');
     } finally {
-        setIsSaving(false);
+      setIsSaving(false);
     }
   };
 
   const handleAddLine = async (line: ExpenseLine) => {
-      if (!activeSheet) return;
-      const updatedSheet = {
-          ...activeSheet,
-          lines: [...activeSheet.lines, line]
-      };
-      setActiveSheet(updatedSheet);
-      await saveSheet(updatedSheet);
-      loadSheets();
-      showToast('تم إضافة البند بنجاح');
+    if (!activeSheet) return;
+    const updatedSheet = {
+      ...activeSheet,
+      lines: [...activeSheet.lines, line]
+    };
+    setActiveSheet(updatedSheet);
+    await saveSheet(updatedSheet);
+    loadSheets();
+    showToast('تم إضافة البند بنجاح');
   };
 
   const handleUpdateLine = async (updatedLine: ExpenseLine) => {
-      if (!activeSheet) return;
-      const updatedSheet = {
-          ...activeSheet,
-          lines: activeSheet.lines.map(l => l.id === updatedLine.id ? updatedLine : l)
-      };
-      setActiveSheet(updatedSheet);
-      await saveSheet(updatedSheet);
-      loadSheets();
-      showToast('تم تحديث البند');
+    if (!activeSheet) return;
+    const updatedSheet = {
+      ...activeSheet,
+      lines: activeSheet.lines.map(l => l.id === updatedLine.id ? updatedLine : l)
+    };
+    setActiveSheet(updatedSheet);
+    await saveSheet(updatedSheet);
+    loadSheets();
+    showToast('تم تحديث البند');
   };
 
   const handleDeleteLine = async (lineId: string) => {
-      if (!activeSheet) return;
-      if (!window.confirm("هل أنت متأكد من حذف هذا السطر؟")) return;
-      
-      const updatedSheet = {
-          ...activeSheet,
-          lines: activeSheet.lines.filter(l => l.id !== lineId)
-      };
-      setActiveSheet(updatedSheet);
-      await saveSheet(updatedSheet);
+    if (!activeSheet) return;
+    if (!window.confirm("هل أنت متأكد من حذف هذا السطر؟")) return;
+
+    const updatedSheet = {
+      ...activeSheet,
+      lines: activeSheet.lines.filter(l => l.id !== lineId)
+    };
+    setActiveSheet(updatedSheet);
+    await saveSheet(updatedSheet);
+    loadSheets();
+    showToast('تم حذف البند', 'success');
+  };
+
+  const handleDeleteSheet = async (sheetId: string) => {
+    try {
+      const token = localStorage.getItem('auth_token');
+      const res = await fetch(`/api/sheets/${sheetId}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      if (!res.ok) throw new Error('فشل الحذف');
+      showToast('تم حذف العهدة بنجاح', 'success');
+      if (activeSheet?.id === sheetId) {
+        setActiveSheet(null);
+      }
       loadSheets();
-      showToast('تم حذف البند', 'success');
+    } catch (error) {
+      console.error('Error deleting sheet:', error);
+      showToast('حدث خطأ أثناء حذف العهدة', 'error');
+    }
   };
 
   // Resize Handler Logic
@@ -180,37 +204,58 @@ const App: React.FC = () => {
     return <LoginScreen onLogin={() => setIsAuthenticated(true)} />;
   }
 
+  const userInfoStr = localStorage.getItem('user_info');
+  const userInfo = userInfoStr ? JSON.parse(userInfoStr) : DEFAULT_USER;
+  const isAdmin = userInfo.role === 'Admin' || userInfo.role === 'TeamLead';
+
   return (
     <div className="flex flex-col h-screen bg-[#f8fafc] font-sans text-slate-800 overflow-hidden">
       {/* Header with Mobile Menu Toggle */}
-      <div className="flex-shrink-0 relative z-20">
-         <ConnectionBar isOnline={isOnline} />
-         <div className="absolute top-1.5 left-3 flex items-center gap-2">
-           <button 
+      <div className="flex-shrink-0 relative z-20 bg-slate-900 shadow-md">
+        <ConnectionBar isOnline={isOnline} user={userInfo} />
+        <div className="flex items-center justify-between px-2 md:px-3 py-1.5 w-full">
+          <div className="flex items-center gap-1.5 md:gap-2">
+            <span className="text-white text-[10px] md:text-xs font-medium px-1.5 md:px-2 py-0.5 md:py-1 bg-white/10 rounded-md">
+              {userInfo.name}
+            </span>
+          </div>
+          <div className="flex flex-1 justify-end items-center gap-1.5 md:gap-2">
+            {isAdmin && (
+              <button
+                onClick={() => setCurrentView(currentView === 'users' ? 'sheets' : 'users')}
+                className="text-white p-1.5 rounded-md hover:bg-white/10 flex items-center gap-1 text-xs font-medium transition-colors"
+                title="إدارة المستخدمين"
+              >
+                <Shield size={16} />
+                <span className="hidden md:inline">{currentView === 'users' ? 'العودة للعهد' : 'إدارة النظام'}</span>
+              </button>
+            )}
+            <button
               onClick={handleLogout}
-              className="text-white p-1.5 rounded-md hover:bg-white/10 flex items-center gap-1 text-xs font-medium"
+              className="text-white p-1.5 rounded-md hover:bg-white/10 flex items-center gap-1 text-xs font-medium transition-colors"
               title="تسجيل الخروج"
-           >
+            >
               <LogOut size={16} />
               <span className="hidden md:inline">تسجيل الخروج</span>
-           </button>
-         </div>
-         <button 
-            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            className="md:hidden absolute top-1.5 right-3 text-white p-1.5 rounded-md hover:bg-white/10"
-         >
-            {isSidebarOpen ? <X size={18} /> : <Menu size={18} />}
-         </button>
+            </button>
+            <button
+              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+              className="md:hidden text-white p-1 rounded-md hover:bg-white/10 transition-colors ml-1"
+            >
+              {isSidebarOpen ? <X size={16} /> : <Menu size={16} />}
+            </button>
+          </div>
+        </div>
       </div>
-      
+
       <ToastContainer toasts={toasts} onDismiss={dismissToast} />
 
       {/* Main Container - Adjusted Padding */}
-      <main className="flex-1 flex overflow-hidden p-1.5 md:p-5 gap-2 md:gap-5 relative">
-        
+      <main className="flex-1 flex overflow-hidden p-1 md:p-5 gap-1 md:gap-5 relative">
+
         {/* Mobile Sidebar Overlay */}
         {isSidebarOpen && (
-          <div 
+          <div
             className="fixed inset-0 bg-black/50 z-30 md:hidden backdrop-blur-sm"
             onClick={() => setIsSidebarOpen(false)}
           />
@@ -222,26 +267,30 @@ const App: React.FC = () => {
             ${isSidebarOpen ? 'translate-x-0' : 'translate-x-full'}
         `}>
           <div className="h-full pt-14 md:pt-0"> {/* Padding top for mobile header */}
-             <SheetList 
-                sheets={sheets} 
-                activeSheetId={activeSheet?.id || null} 
-                onSelectSheet={handleSelectSheet}
-                onRefresh={loadSheets}
-                onCreateNew={handleCreateSheet}
-             />
+            <SheetList
+              sheets={sheets}
+              activeSheetId={activeSheet?.id || null}
+              onSelectSheet={handleSelectSheet}
+              onRefresh={loadSheets}
+              onCreateNew={handleCreateSheet}
+              onDeleteSheet={handleDeleteSheet}
+              isAdmin={isAdmin}
+            />
           </div>
         </div>
 
         {/* Main Content */}
         <div className="flex-1 flex flex-col h-full overflow-hidden w-full">
-          {!activeSheet ? (
+          {currentView === 'users' ? (
+            <UserManagement onShowToast={showToast} />
+          ) : !activeSheet ? (
             <div className="flex-1 flex flex-col items-center justify-center bg-white rounded-xl border border-dashed border-slate-200 text-slate-400 m-2">
               <div className="w-16 h-16 md:w-20 md:h-20 bg-slate-50 rounded-full flex items-center justify-center mb-4 md:mb-5 shadow-inner">
                 <Filter size={28} className="text-slate-300" />
               </div>
-              <h2 className="text-lg md:text-xl font-bold text-slate-600">اختر عهدة للبدء</h2>
-              <p className="mt-2 text-xs md:text-sm text-slate-400 text-center px-4">أو افتح القائمة لاختيار عهدة سابقة</p>
-              <button 
+              <h2 className="text-base md:text-xl font-bold text-slate-600">اختر عهدة للبدء</h2>
+              <p className="mt-1 md:mt-2 text-[10px] md:text-sm text-slate-400 text-center px-4">أو افتح القائمة لاختيار عهدة سابقة</p>
+              <button
                 onClick={handleCreateSheet}
                 className="mt-6 md:mt-8 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition shadow-lg shadow-blue-200 text-xs md:text-sm font-semibold"
               >
@@ -252,83 +301,81 @@ const App: React.FC = () => {
             <>
               {/* Top Header (Compact on mobile) */}
               <div className="flex-shrink-0">
-                <SheetHeader 
-                    sheet={activeSheet}
-                    onUpdateSheet={handleUpdateSheetHeader}
-                    onSave={handleSaveSheet}
-                    onExport={() => exportToCSV(activeSheet)}
-                    isSaving={isSaving}
+                <SheetHeader
+                  sheet={activeSheet}
+                  onUpdateSheet={handleUpdateSheetHeader}
+                  onSave={handleSaveSheet}
+                  onExport={() => exportToCSV(activeSheet)}
+                  isSaving={isSaving}
                 />
-                
+
                 {/* Filter Tabs - Ultra Compact */}
-                <div className="flex items-center gap-1.5 mb-2 overflow-x-auto pb-1 custom-scrollbar px-1 min-h-[28px]">
-                    <span className="text-[10px] font-bold text-slate-400 whitespace-nowrap ml-1 uppercase tracking-wide">تصفية:</span>
+                <div className="flex items-center gap-1 mb-2 overflow-x-auto pb-1 custom-scrollbar px-1 md:gap-1.5">
+                  <span className="text-[9px] md:text-[10px] font-bold text-slate-400 whitespace-nowrap ml-1 uppercase tracking-wide">تصفية:</span>
+                  <button
+                    onClick={() => setFilterReason('ALL')}
+                    className={`px-2 py-1 rounded-md text-[10px] font-medium transition-all whitespace-nowrap ${filterReason === 'ALL'
+                      ? 'bg-slate-800 text-white shadow-sm'
+                      : 'bg-white border border-slate-200 text-slate-500'
+                      }`}
+                  >
+                    الكل
+                  </button>
+                  {REASON_OPTIONS.map(reason => (
                     <button
-                        onClick={() => setFilterReason('ALL')}
-                        className={`px-2 py-1 rounded-md text-[10px] font-medium transition-all whitespace-nowrap ${
-                            filterReason === 'ALL' 
-                            ? 'bg-slate-800 text-white shadow-sm' 
-                            : 'bg-white border border-slate-200 text-slate-500'
+                      key={reason}
+                      onClick={() => setFilterReason(reason)}
+                      className={`px-1.5 md:px-2 py-0.5 md:py-1 rounded-md text-[9px] md:text-[10px] font-medium transition-all whitespace-nowrap ${filterReason === reason
+                        ? 'bg-blue-600 text-white shadow-sm'
+                        : 'bg-white border border-slate-200 text-slate-500'
                         }`}
                     >
-                        الكل
+                      {reason}
                     </button>
-                    {REASON_OPTIONS.map(reason => (
-                        <button
-                            key={reason}
-                            onClick={() => setFilterReason(reason)}
-                            className={`px-2 py-1 rounded-md text-[10px] font-medium transition-all whitespace-nowrap ${
-                                filterReason === reason
-                                ? 'bg-blue-600 text-white shadow-sm'
-                                : 'bg-white border border-slate-200 text-slate-500'
-                            }`}
-                        >
-                            {reason}
-                        </button>
-                    ))}
+                  ))}
                 </div>
               </div>
 
               {/* Resizable Container (Flex Column) */}
               <div className="flex-1 flex flex-col min-h-0 bg-white rounded-xl shadow-[0_2px_10px_-3px_rgba(0,0,0,0.05)] border border-slate-100 overflow-hidden relative">
-                  
-                  {/* Notes Pane (Hidden on Mobile) */}
-                  <div 
-                    style={{ height: notesHeight }} 
-                    className="relative bg-slate-50/30 flex flex-col border-b border-slate-100 transition-colors hover:bg-slate-50/50 hidden md:flex"
-                  >
-                     <div className="absolute top-2 right-3 flex items-center gap-1.5 text-slate-400 pointer-events-none">
-                        <FileText size={12} />
-                        <span className="text-[10px] font-bold uppercase tracking-wide">ملاحظات العهدة العامة</span>
-                     </div>
-                     <textarea
-                        value={activeSheet.notes || ''}
-                        onChange={(e) => setActiveSheet({ ...activeSheet, notes: e.target.value })}
-                        className="w-full h-full p-3 pt-8 bg-transparent text-sm text-slate-700 placeholder:text-slate-400/60 resize-none focus:outline-none focus:bg-white transition-colors"
-                        placeholder="سجل هنا أي ملاحظات عامة تتعلق بالعهدة..."
-                     />
-                  </div>
 
-                  {/* Resizer Handle (Desktop only) */}
-                  <div 
-                    onMouseDown={startResizing}
-                    className="hidden md:flex h-3 bg-slate-50 border-y border-slate-100 cursor-row-resize items-center justify-center hover:bg-slate-200 transition-colors group z-10 flex-shrink-0 select-none"
-                    title="سحب لتغيير الحجم"
-                  >
-                    <GripHorizontal size={16} className="text-slate-300 group-hover:text-slate-500 transition-colors" />
+                {/* Notes Pane (Hidden on Mobile) */}
+                <div
+                  style={{ height: notesHeight }}
+                  className="relative bg-slate-50/30 flex flex-col border-b border-slate-100 transition-colors hover:bg-slate-50/50 hidden md:flex"
+                >
+                  <div className="absolute top-2 right-3 flex items-center gap-1.5 text-slate-400 pointer-events-none">
+                    <FileText size={12} />
+                    <span className="text-[10px] font-bold uppercase tracking-wide">ملاحظات العهدة العامة</span>
                   </div>
+                  <textarea
+                    value={activeSheet.notes || ''}
+                    onChange={(e) => setActiveSheet({ ...activeSheet, notes: e.target.value })}
+                    className="w-full h-full p-3 pt-8 bg-transparent text-sm text-slate-700 placeholder:text-slate-400/60 resize-none focus:outline-none focus:bg-white transition-colors"
+                    placeholder="سجل هنا أي ملاحظات عامة تتعلق بالعهدة..."
+                  />
+                </div>
 
-                  {/* Table Pane */}
-                  <div className="flex-1 min-h-0 bg-white flex flex-col">
-                      <ExpenseTable 
-                        sheet={activeSheet}
-                        onAddLine={handleAddLine}
-                        onUpdateLine={handleUpdateLine}
-                        onDeleteLine={handleDeleteLine}
-                        reasonFilter={filterReason}
-                        showToast={showToast}
-                      />
-                  </div>
+                {/* Resizer Handle (Desktop only) */}
+                <div
+                  onMouseDown={startResizing}
+                  className="hidden md:flex h-3 bg-slate-50 border-y border-slate-100 cursor-row-resize items-center justify-center hover:bg-slate-200 transition-colors group z-10 flex-shrink-0 select-none"
+                  title="سحب لتغيير الحجم"
+                >
+                  <GripHorizontal size={16} className="text-slate-300 group-hover:text-slate-500 transition-colors" />
+                </div>
+
+                {/* Table Pane */}
+                <div className="flex-1 min-h-0 bg-white flex flex-col">
+                  <ExpenseTable
+                    sheet={activeSheet}
+                    onAddLine={handleAddLine}
+                    onUpdateLine={handleUpdateLine}
+                    onDeleteLine={handleDeleteLine}
+                    reasonFilter={filterReason}
+                    showToast={showToast}
+                  />
+                </div>
               </div>
             </>
           )}
