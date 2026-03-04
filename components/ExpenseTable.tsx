@@ -11,6 +11,7 @@ interface ExpenseTableProps {
     onUpdateLine: (line: ExpenseLine) => void;
     onDeleteLine: (lineId: string) => void;
     reasonFilter: ExpenseReason | 'ALL';
+    searchTerm?: string;
     showToast: (msg: string, type?: ToastType) => void;
 }
 
@@ -33,15 +34,30 @@ export const ExpenseTable: React.FC<ExpenseTableProps> = ({
     onUpdateLine,
     onDeleteLine,
     reasonFilter,
+    searchTerm = '',
     showToast
 }) => {
     const [draft, setDraft] = useState(EmptyDraftLine);
     const [isEditingId, setIsEditingId] = useState<string | null>(null);
 
-    // Filter lines
-    const visibleLines = reasonFilter === 'ALL'
-        ? sheet.lines
-        : sheet.lines.filter(l => l.reason === reasonFilter);
+    // Filter lines by reason and search term
+    const visibleLines = sheet.lines.filter(l => {
+        if (reasonFilter !== 'ALL' && l.reason !== reasonFilter) return false;
+        if (searchTerm.trim()) {
+            const term = searchTerm.trim().toLowerCase();
+            return (
+                l.company.toLowerCase().includes(term) ||
+                l.description.toLowerCase().includes(term) ||
+                (l.tax_number || '').toLowerCase().includes(term) ||
+                (l.invoice_number || '').toLowerCase().includes(term) ||
+                (l.buyer_name || '').toLowerCase().includes(term) ||
+                (l.notes || '').toLowerCase().includes(term) ||
+                l.date.includes(term) ||
+                l.amount.toString().includes(term)
+            );
+        }
+        return true;
+    });
 
     const handleDraftChange = (field: keyof typeof draft, value: any) => {
         setDraft(prev => ({ ...prev, [field]: value }));

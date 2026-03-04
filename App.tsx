@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+
 import { Sheet, ExpenseLine, ExpenseReason } from './types';
 import { getSheets, saveSheet, createNewSheet, checkHealth } from './services/expenseService';
 import { DEFAULT_USER, REASON_OPTIONS } from './constants';
@@ -12,7 +13,7 @@ import { ToastContainer, ToastMessage, ToastType } from './components/Toast';
 import { LoginScreen } from './components/LoginScreen';
 import { UserManagement } from './components/UserManagement';
 import { ThemeToggle } from './components/ThemeToggle';
-import { Filter, GripHorizontal, FileText, Menu, X, LogOut, Shield } from 'lucide-react';
+import { Filter, GripHorizontal, FileText, Menu, X, LogOut, Shield, Search } from 'lucide-react';
 
 const App: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -21,6 +22,7 @@ const App: React.FC = () => {
   const [activeSheet, setActiveSheet] = useState<Sheet | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [filterReason, setFilterReason] = useState<ExpenseReason | 'ALL'>('ALL');
+  const [searchTerm, setSearchTerm] = useState('');
   const [currentView, setCurrentView] = useState<'sheets' | 'users'>('sheets');
 
   // Mobile UI State
@@ -323,6 +325,17 @@ const App: React.FC = () => {
                   >
                     الكل
                   </button>
+                  {/* Search Input */}
+                  <div className="relative flex-shrink-0">
+                    <Search size={12} className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 pointer-events-none" />
+                    <input
+                      type="text"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      placeholder="بحث..."
+                      className="w-24 md:w-36 h-6 md:h-7 pr-7 pl-2 text-[10px] md:text-xs bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 rounded-md text-slate-700 dark:text-slate-200 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 dark:focus:border-blue-500 transition-all"
+                    />
+                  </div>
                   {REASON_OPTIONS.map(reason => (
                     <button
                       key={reason}
@@ -375,6 +388,7 @@ const App: React.FC = () => {
                     onUpdateLine={handleUpdateLine}
                     onDeleteLine={handleDeleteLine}
                     reasonFilter={filterReason}
+                    searchTerm={searchTerm}
                     showToast={showToast}
                   />
                 </div>
