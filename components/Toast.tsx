@@ -33,24 +33,30 @@ const ToastItem: React.FC<{ toast: ToastMessage; onDismiss: (id: string) => void
   }, [toast.id, onDismiss]);
 
   return (
-    <div 
+    <div
       className={`
         pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-lg shadow-lg border transform transition-all duration-300 animate-in slide-in-from-bottom-5 fade-in
-        ${toast.type === 'success' ? 'bg-white border-emerald-100 text-slate-700' : 'bg-white border-rose-100 text-slate-700'}
+        ${toast.type === 'success'
+          ? 'bg-white dark:bg-slate-800 border-emerald-100 dark:border-emerald-800 text-slate-700 dark:text-slate-200'
+          : 'bg-white dark:bg-slate-800 border-rose-100 dark:border-rose-800 text-slate-700 dark:text-slate-200'
+        }
       `}
     >
       <div className={`
         p-1.5 rounded-full 
-        ${toast.type === 'success' ? 'bg-emerald-100 text-emerald-600' : 'bg-rose-100 text-rose-600'}
+        ${toast.type === 'success'
+          ? 'bg-emerald-100 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400'
+          : 'bg-rose-100 dark:bg-rose-900/50 text-rose-600 dark:text-rose-400'
+        }
       `}>
         {toast.type === 'success' ? <CheckCircle size={16} /> : <AlertCircle size={16} />}
       </div>
-      
+
       <p className="text-sm font-medium">{toast.message}</p>
-      
-      <button 
+
+      <button
         onClick={() => onDismiss(toast.id)}
-        className="mr-2 text-slate-400 hover:text-slate-600 transition-colors"
+        className="mr-2 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
       >
         <X size={14} />
       </button>

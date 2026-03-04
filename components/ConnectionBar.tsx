@@ -9,7 +9,7 @@ interface ConnectionBarProps {
 
 export const ConnectionBar: React.FC<ConnectionBarProps> = ({ isOnline, user }) => {
   return (
-    <div className="bg-slate-900 text-white text-[10px] md:text-xs py-1.5 px-3 flex justify-between items-center shadow-md min-h-[40px] md:min-h-[50px]">
+    <div className="bg-slate-900 dark:bg-slate-950 text-white text-[10px] md:text-xs py-1.5 px-3 flex justify-between items-center shadow-md min-h-[40px] md:min-h-[50px]">
       <div className="flex items-center gap-3 md:gap-4">
         {/* App Logo */}
         <div className="flex items-center gap-2 select-none pt-1 shrink-0">
@@ -34,7 +34,7 @@ export const ConnectionBar: React.FC<ConnectionBarProps> = ({ isOnline, user }) 
           <p className="font-bold text-white text-[11px] md:text-xs">{user.name}</p>
           <p className="text-[9px] md:text-[10px] text-slate-400 opacity-80 hidden md:block">{user.role}</p>
         </div>
-        <div className="bg-slate-800 p-1.5 md:p-2 rounded-full border border-slate-700 shadow-sm">
+        <div className="bg-slate-800 dark:bg-slate-700 p-1.5 md:p-2 rounded-full border border-slate-700 dark:border-slate-600 shadow-sm">
           <User size={14} className="text-slate-200" />
         </div>
       </div>

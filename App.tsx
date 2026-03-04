@@ -11,6 +11,7 @@ import { ExpenseTable } from './components/ExpenseTable';
 import { ToastContainer, ToastMessage, ToastType } from './components/Toast';
 import { LoginScreen } from './components/LoginScreen';
 import { UserManagement } from './components/UserManagement';
+import { ThemeToggle } from './components/ThemeToggle';
 import { Filter, GripHorizontal, FileText, Menu, X, LogOut, Shield } from 'lucide-react';
 
 const App: React.FC = () => {
@@ -209,9 +210,9 @@ const App: React.FC = () => {
   const isAdmin = userInfo.role === 'Admin' || userInfo.role === 'TeamLead';
 
   return (
-    <div className="flex flex-col h-screen bg-[#f8fafc] font-sans text-slate-800 overflow-hidden">
+    <div className="flex flex-col h-screen bg-[#f8fafc] dark:bg-slate-900 font-sans text-slate-800 dark:text-slate-200 overflow-hidden">
       {/* Header with Mobile Menu Toggle */}
-      <div className="flex-shrink-0 relative z-20 bg-slate-900 shadow-md">
+      <div className="flex-shrink-0 relative z-20 bg-slate-900 dark:bg-slate-950 shadow-md">
         <ConnectionBar isOnline={isOnline} user={userInfo} />
         <div className="flex items-center justify-between px-2 md:px-3 py-1.5 w-full">
           <div className="flex items-center gap-1.5 md:gap-2">
@@ -220,6 +221,7 @@ const App: React.FC = () => {
             </span>
           </div>
           <div className="flex flex-1 justify-end items-center gap-1.5 md:gap-2">
+            <ThemeToggle />
             {isAdmin && (
               <button
                 onClick={() => setCurrentView(currentView === 'users' ? 'sheets' : 'users')}
@@ -250,20 +252,20 @@ const App: React.FC = () => {
 
       <ToastContainer toasts={toasts} onDismiss={dismissToast} />
 
-      {/* Main Container - Adjusted Padding */}
+      {/* Main Container */}
       <main className="flex-1 flex overflow-hidden p-1 md:p-5 gap-1 md:gap-5 relative">
 
         {/* Mobile Sidebar Overlay */}
         {isSidebarOpen && (
           <div
-            className="fixed inset-0 bg-black/50 z-30 md:hidden backdrop-blur-sm"
+            className="fixed inset-0 bg-black/50 dark:bg-black/70 z-30 md:hidden backdrop-blur-sm"
             onClick={() => setIsSidebarOpen(false)}
           />
         )}
 
         {/* Sidebar */}
         <div className={`
-            fixed inset-y-0 right-0 z-40 w-72 transform transition-transform duration-300 ease-in-out bg-white shadow-2xl md:translate-x-0 md:static md:w-64 md:shadow-none md:bg-transparent md:block
+            fixed inset-y-0 right-0 z-40 w-72 transform transition-transform duration-300 ease-in-out bg-white dark:bg-slate-800 shadow-2xl md:translate-x-0 md:static md:w-64 md:shadow-none md:bg-transparent md:block
             ${isSidebarOpen ? 'translate-x-0' : 'translate-x-full'}
         `}>
           <div className="h-full pt-14 md:pt-0"> {/* Padding top for mobile header */}
@@ -284,15 +286,15 @@ const App: React.FC = () => {
           {currentView === 'users' ? (
             <UserManagement onShowToast={showToast} />
           ) : !activeSheet ? (
-            <div className="flex-1 flex flex-col items-center justify-center bg-white rounded-xl border border-dashed border-slate-200 text-slate-400 m-2">
-              <div className="w-16 h-16 md:w-20 md:h-20 bg-slate-50 rounded-full flex items-center justify-center mb-4 md:mb-5 shadow-inner">
-                <Filter size={28} className="text-slate-300" />
+            <div className="flex-1 flex flex-col items-center justify-center bg-white dark:bg-slate-800 rounded-xl border border-dashed border-slate-200 dark:border-slate-700 text-slate-400 dark:text-slate-500 m-2">
+              <div className="w-16 h-16 md:w-20 md:h-20 bg-slate-50 dark:bg-slate-700 rounded-full flex items-center justify-center mb-4 md:mb-5 shadow-inner">
+                <Filter size={28} className="text-slate-300 dark:text-slate-500" />
               </div>
-              <h2 className="text-base md:text-xl font-bold text-slate-600">اختر عهدة للبدء</h2>
-              <p className="mt-1 md:mt-2 text-[10px] md:text-sm text-slate-400 text-center px-4">أو افتح القائمة لاختيار عهدة سابقة</p>
+              <h2 className="text-base md:text-xl font-bold text-slate-600 dark:text-slate-300">اختر عهدة للبدء</h2>
+              <p className="mt-1 md:mt-2 text-[10px] md:text-sm text-slate-400 dark:text-slate-500 text-center px-4">أو افتح القائمة لاختيار عهدة سابقة</p>
               <button
                 onClick={handleCreateSheet}
-                className="mt-6 md:mt-8 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition shadow-lg shadow-blue-200 text-xs md:text-sm font-semibold"
+                className="mt-6 md:mt-8 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition shadow-lg shadow-blue-200 dark:shadow-blue-900/30 text-xs md:text-sm font-semibold"
               >
                 إنشاء عهدة جديدة
               </button>
@@ -311,12 +313,12 @@ const App: React.FC = () => {
 
                 {/* Filter Tabs - Ultra Compact */}
                 <div className="flex items-center gap-1 mb-2 overflow-x-auto pb-1 custom-scrollbar px-1 md:gap-1.5">
-                  <span className="text-[9px] md:text-[10px] font-bold text-slate-400 whitespace-nowrap ml-1 uppercase tracking-wide">تصفية:</span>
+                  <span className="text-[9px] md:text-[10px] font-bold text-slate-400 dark:text-slate-500 whitespace-nowrap ml-1 uppercase tracking-wide">تصفية:</span>
                   <button
                     onClick={() => setFilterReason('ALL')}
                     className={`px-2 py-1 rounded-md text-[10px] font-medium transition-all whitespace-nowrap ${filterReason === 'ALL'
-                      ? 'bg-slate-800 text-white shadow-sm'
-                      : 'bg-white border border-slate-200 text-slate-500'
+                      ? 'bg-slate-800 dark:bg-slate-200 text-white dark:text-slate-900 shadow-sm'
+                      : 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 text-slate-500 dark:text-slate-400'
                       }`}
                   >
                     الكل
@@ -327,7 +329,7 @@ const App: React.FC = () => {
                       onClick={() => setFilterReason(reason)}
                       className={`px-1.5 md:px-2 py-0.5 md:py-1 rounded-md text-[9px] md:text-[10px] font-medium transition-all whitespace-nowrap ${filterReason === reason
                         ? 'bg-blue-600 text-white shadow-sm'
-                        : 'bg-white border border-slate-200 text-slate-500'
+                        : 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-600 text-slate-500 dark:text-slate-400'
                         }`}
                     >
                       {reason}
@@ -337,21 +339,21 @@ const App: React.FC = () => {
               </div>
 
               {/* Resizable Container (Flex Column) */}
-              <div className="flex-1 flex flex-col min-h-0 bg-white rounded-xl shadow-[0_2px_10px_-3px_rgba(0,0,0,0.05)] border border-slate-100 overflow-hidden relative">
+              <div className="flex-1 flex flex-col min-h-0 bg-white dark:bg-slate-800 rounded-xl shadow-[0_2px_10px_-3px_rgba(0,0,0,0.05)] dark:shadow-none border border-slate-100 dark:border-slate-700 overflow-hidden relative">
 
                 {/* Notes Pane (Hidden on Mobile) */}
                 <div
                   style={{ height: notesHeight }}
-                  className="relative bg-slate-50/30 flex flex-col border-b border-slate-100 transition-colors hover:bg-slate-50/50 hidden md:flex"
+                  className="relative bg-slate-50/30 dark:bg-slate-800/50 flex flex-col border-b border-slate-100 dark:border-slate-700 transition-colors hover:bg-slate-50/50 dark:hover:bg-slate-700/50 hidden md:flex"
                 >
-                  <div className="absolute top-2 right-3 flex items-center gap-1.5 text-slate-400 pointer-events-none">
+                  <div className="absolute top-2 right-3 flex items-center gap-1.5 text-slate-400 dark:text-slate-500 pointer-events-none">
                     <FileText size={12} />
                     <span className="text-[10px] font-bold uppercase tracking-wide">ملاحظات العهدة العامة</span>
                   </div>
                   <textarea
                     value={activeSheet.notes || ''}
                     onChange={(e) => setActiveSheet({ ...activeSheet, notes: e.target.value })}
-                    className="w-full h-full p-3 pt-8 bg-transparent text-sm text-slate-700 placeholder:text-slate-400/60 resize-none focus:outline-none focus:bg-white transition-colors"
+                    className="w-full h-full p-3 pt-8 bg-transparent text-sm text-slate-700 dark:text-slate-200 placeholder:text-slate-400/60 dark:placeholder:text-slate-500/60 resize-none focus:outline-none focus:bg-white dark:focus:bg-slate-700/50 transition-colors"
                     placeholder="سجل هنا أي ملاحظات عامة تتعلق بالعهدة..."
                   />
                 </div>
@@ -359,14 +361,14 @@ const App: React.FC = () => {
                 {/* Resizer Handle (Desktop only) */}
                 <div
                   onMouseDown={startResizing}
-                  className="hidden md:flex h-3 bg-slate-50 border-y border-slate-100 cursor-row-resize items-center justify-center hover:bg-slate-200 transition-colors group z-10 flex-shrink-0 select-none"
+                  className="hidden md:flex h-3 bg-slate-50 dark:bg-slate-700 border-y border-slate-100 dark:border-slate-600 cursor-row-resize items-center justify-center hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors group z-10 flex-shrink-0 select-none"
                   title="سحب لتغيير الحجم"
                 >
-                  <GripHorizontal size={16} className="text-slate-300 group-hover:text-slate-500 transition-colors" />
+                  <GripHorizontal size={16} className="text-slate-300 dark:text-slate-500 group-hover:text-slate-500 dark:group-hover:text-slate-300 transition-colors" />
                 </div>
 
                 {/* Table Pane */}
-                <div className="flex-1 min-h-0 bg-white flex flex-col">
+                <div className="flex-1 min-h-0 bg-white dark:bg-slate-800 flex flex-col">
                   <ExpenseTable
                     sheet={activeSheet}
                     onAddLine={handleAddLine}

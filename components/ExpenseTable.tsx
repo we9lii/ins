@@ -120,38 +120,38 @@ export const ExpenseTable: React.FC<ExpenseTableProps> = ({
         }
     };
 
-    // Shared input class for consistency - Light Theme
-    const inputClass = "w-full h-8 md:h-9 px-2 md:px-3 text-[10px] md:text-xs bg-white border border-slate-200 rounded-md md:rounded-lg text-slate-700 placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 focus:outline-none transition-all shadow-sm";
-    const iconClass = "absolute top-2 md:top-2.5 right-2 md:right-2.5 text-slate-400 pointer-events-none";
+    // Shared input class for consistency - Supports Light & Dark
+    const inputClass = "w-full h-8 md:h-9 px-2 md:px-3 text-[10px] md:text-xs bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-md md:rounded-lg text-slate-700 dark:text-slate-200 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:border-blue-500 dark:focus:border-blue-400 focus:ring-2 focus:ring-blue-500/10 focus:outline-none transition-all shadow-sm dark:shadow-none";
+    const iconClass = "absolute top-2 md:top-2.5 right-2 md:right-2.5 text-slate-400 dark:text-slate-500 pointer-events-none";
     const withRightIcon = "!pr-8 !pl-2";
     const withLeftIcon = "!pl-8 !pr-3";
 
     return (
-        <div className="bg-white rounded-xl shadow-[0_2px_10px_-3px_rgba(0,0,0,0.05)] border border-slate-100 flex flex-col h-full overflow-hidden">
+        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-[0_2px_10px_-3px_rgba(0,0,0,0.05)] dark:shadow-none border border-slate-100 dark:border-slate-700 flex flex-col h-full overflow-hidden">
             {/* Table Area (Scrollable) */}
             <div className="overflow-x-auto flex-1 custom-scrollbar relative">
                 <table className="w-full text-sm text-right border-collapse">
-                    <thead className="bg-slate-50/80 border-b border-slate-100 sticky top-0 z-10 backdrop-blur-sm">
+                    <thead className="bg-slate-50/80 dark:bg-slate-900/50 border-b border-slate-100 dark:border-slate-700 sticky top-0 z-10 backdrop-blur-sm">
                         <tr>
-                            <th className="p-2 md:p-3 text-[9px] md:text-[11px] font-bold text-slate-500 whitespace-nowrap w-[80px] md:w-[90px]">التاريخ</th>
-                            <th className="p-2 md:p-3 text-[9px] md:text-[11px] font-bold text-slate-500 whitespace-nowrap min-w-[100px] md:min-w-[120px]">الجهة المستفيدة</th>
-                            <th className="hidden md:table-cell p-3 text-[11px] font-bold text-slate-500 w-[100px]">الرقم الضريبي</th>
-                            <th className="hidden md:table-cell p-3 text-[11px] font-bold text-slate-500 w-[90px]">الفاتورة</th>
-                            <th className="p-2 md:p-3 text-[9px] md:text-[11px] font-bold text-slate-500 whitespace-nowrap min-w-[120px] md:min-w-[150px]">البيان</th>
-                            <th className="p-2 md:p-3 text-[9px] md:text-[11px] font-bold text-slate-500 whitespace-nowrap w-[100px] md:w-[130px]">التصنيف</th>
-                            <th className="hidden md:table-cell p-3 text-[11px] font-bold text-slate-500 w-[80px]">المبلغ</th>
-                            <th className="hidden md:table-cell p-3 text-[11px] font-bold text-slate-500 w-[70px]">رسوم</th>
-                            <th className="p-2 md:p-3 text-[9px] md:text-[11px] font-bold text-slate-500 whitespace-nowrap w-[75px] md:w-[90px]">الإجمالي</th>
-                            <th className="hidden md:table-cell p-3 text-[11px] font-bold text-slate-500 w-[100px]">المشتري</th>
-                            <th className="hidden md:table-cell p-3 text-[11px] font-bold text-slate-500 min-w-[120px]">ملاحظات</th>
-                            <th className="p-2 md:p-3 text-[9px] md:text-[11px] font-bold text-slate-500 text-center w-[60px] md:w-[70px]">إجراء</th>
+                            <th className="p-2 md:p-3 text-[9px] md:text-[11px] font-bold text-slate-500 dark:text-slate-400 whitespace-nowrap w-[80px] md:w-[90px]">التاريخ</th>
+                            <th className="p-2 md:p-3 text-[9px] md:text-[11px] font-bold text-slate-500 dark:text-slate-400 whitespace-nowrap min-w-[100px] md:min-w-[120px]">الجهة المستفيدة</th>
+                            <th className="hidden md:table-cell p-3 text-[11px] font-bold text-slate-500 dark:text-slate-400 w-[100px]">الرقم الضريبي</th>
+                            <th className="hidden md:table-cell p-3 text-[11px] font-bold text-slate-500 dark:text-slate-400 w-[90px]">الفاتورة</th>
+                            <th className="p-2 md:p-3 text-[9px] md:text-[11px] font-bold text-slate-500 dark:text-slate-400 whitespace-nowrap min-w-[120px] md:min-w-[150px]">البيان</th>
+                            <th className="p-2 md:p-3 text-[9px] md:text-[11px] font-bold text-slate-500 dark:text-slate-400 whitespace-nowrap w-[100px] md:w-[130px]">التصنيف</th>
+                            <th className="hidden md:table-cell p-3 text-[11px] font-bold text-slate-500 dark:text-slate-400 w-[80px]">المبلغ</th>
+                            <th className="hidden md:table-cell p-3 text-[11px] font-bold text-slate-500 dark:text-slate-400 w-[70px]">رسوم</th>
+                            <th className="p-2 md:p-3 text-[9px] md:text-[11px] font-bold text-slate-500 dark:text-slate-400 whitespace-nowrap w-[75px] md:w-[90px]">الإجمالي</th>
+                            <th className="hidden md:table-cell p-3 text-[11px] font-bold text-slate-500 dark:text-slate-400 w-[100px]">المشتري</th>
+                            <th className="hidden md:table-cell p-3 text-[11px] font-bold text-slate-500 dark:text-slate-400 min-w-[120px]">ملاحظات</th>
+                            <th className="p-2 md:p-3 text-[9px] md:text-[11px] font-bold text-slate-500 dark:text-slate-400 text-center w-[60px] md:w-[70px]">إجراء</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-50">
+                    <tbody className="divide-y divide-slate-50 dark:divide-slate-700/50">
                         {visibleLines.length === 0 ? (
                             <tr>
                                 <td colSpan={12} className="text-center py-10 md:py-20">
-                                    <div className="flex flex-col items-center justify-center text-slate-300">
+                                    <div className="flex flex-col items-center justify-center text-slate-300 dark:text-slate-600">
                                         <FileText size={40} className="mb-2 opacity-50" />
                                         <p className="text-sm font-medium">لا توجد مصروفات مسجلة</p>
                                         <p className="text-xs mt-1 opacity-70">ابدأ بإضافة بنود جديدة من الأسفل</p>
@@ -160,18 +160,18 @@ export const ExpenseTable: React.FC<ExpenseTableProps> = ({
                             </tr>
                         ) : (
                             visibleLines.map((line) => (
-                                <tr key={line.id} className={`group hover:bg-slate-50 transition-colors ${isEditingId === line.id ? 'bg-blue-50/40' : ''}`}>
-                                    <td className="p-2 md:p-3 text-slate-500 font-mono text-[9px] md:text-xs whitespace-nowrap">{line.date}</td>
+                                <tr key={line.id} className={`group hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors ${isEditingId === line.id ? 'bg-blue-50/40 dark:bg-blue-900/20' : ''}`}>
+                                    <td className="p-2 md:p-3 text-slate-500 dark:text-slate-400 font-mono text-[9px] md:text-xs whitespace-nowrap">{line.date}</td>
 
-                                    <td className="p-2 md:p-3 font-medium text-slate-700 text-[10px] md:text-xs">
+                                    <td className="p-2 md:p-3 font-medium text-slate-700 dark:text-slate-200 text-[10px] md:text-xs">
                                         <div className="truncate max-w-[100px] md:max-w-[150px]" title={line.company}>{line.company}</div>
-                                        {line.tax_number && <div className="text-[8px] md:text-[9px] text-slate-400 font-mono mt-0.5 md:hidden"># {line.tax_number}</div>}
+                                        {line.tax_number && <div className="text-[8px] md:text-[9px] text-slate-400 dark:text-slate-500 font-mono mt-0.5 md:hidden"># {line.tax_number}</div>}
                                     </td>
 
-                                    <td className="hidden md:table-cell p-3 text-slate-500 font-mono text-xs">{line.tax_number || '-'}</td>
-                                    <td className="hidden md:table-cell p-3 text-slate-500 font-mono text-xs">{line.invoice_number || '-'}</td>
+                                    <td className="hidden md:table-cell p-3 text-slate-500 dark:text-slate-400 font-mono text-xs">{line.tax_number || '-'}</td>
+                                    <td className="hidden md:table-cell p-3 text-slate-500 dark:text-slate-400 font-mono text-xs">{line.invoice_number || '-'}</td>
 
-                                    <td className="p-2 md:p-3 text-slate-600 text-[10px] md:text-xs">
+                                    <td className="p-2 md:p-3 text-slate-600 dark:text-slate-300 text-[10px] md:text-xs">
                                         <div className="truncate max-w-[130px] md:max-w-xs" title={line.description}>{line.description}</div>
                                     </td>
 
@@ -181,22 +181,22 @@ export const ExpenseTable: React.FC<ExpenseTableProps> = ({
                                         </span>
                                     </td>
 
-                                    <td className="hidden md:table-cell p-3 font-medium text-slate-700 font-mono text-xs">{line.amount.toFixed(2)}</td>
-                                    <td className="hidden md:table-cell p-3 text-slate-400 font-mono text-xs">{line.bank_fees ? line.bank_fees.toFixed(2) : '-'}</td>
+                                    <td className="hidden md:table-cell p-3 font-medium text-slate-700 dark:text-slate-200 font-mono text-xs">{line.amount.toFixed(2)}</td>
+                                    <td className="hidden md:table-cell p-3 text-slate-400 dark:text-slate-500 font-mono text-xs">{line.bank_fees ? line.bank_fees.toFixed(2) : '-'}</td>
 
-                                    <td className="p-2 md:p-3 font-bold text-blue-600 font-mono text-[9px] md:text-xs whitespace-nowrap">
+                                    <td className="p-2 md:p-3 font-bold text-blue-600 dark:text-blue-400 font-mono text-[9px] md:text-xs whitespace-nowrap">
                                         {(line.amount + (line.bank_fees || 0)).toFixed(2)}
                                     </td>
 
-                                    <td className="hidden md:table-cell p-3 text-slate-500 text-xs">{line.buyer_name || '-'}</td>
-                                    <td className="hidden md:table-cell p-3 text-slate-400 text-xs truncate max-w-[150px]">{line.notes || '-'}</td>
+                                    <td className="hidden md:table-cell p-3 text-slate-500 dark:text-slate-400 text-xs">{line.buyer_name || '-'}</td>
+                                    <td className="hidden md:table-cell p-3 text-slate-400 dark:text-slate-500 text-xs truncate max-w-[150px]">{line.notes || '-'}</td>
 
                                     <td className="p-2 md:p-3 text-center">
                                         <div className="flex flex-col md:flex-row items-center justify-center gap-1.5 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity">
                                             <button
                                                 onClick={() => handleEditClick(line)}
                                                 disabled={!!isEditingId}
-                                                className="text-blue-500 hover:text-blue-700 disabled:opacity-30 transition-colors"
+                                                className="text-blue-500 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 disabled:opacity-30 transition-colors"
                                                 title="تعديل"
                                             >
                                                 <Edit3 size={12} className="md:w-[14px] md:h-[14px]" />
@@ -204,7 +204,7 @@ export const ExpenseTable: React.FC<ExpenseTableProps> = ({
                                             <button
                                                 onClick={() => onDeleteLine(line.id)}
                                                 disabled={!!isEditingId}
-                                                className="text-rose-400 hover:text-rose-600 disabled:opacity-30 transition-colors"
+                                                className="text-rose-400 dark:text-rose-500 hover:text-rose-600 dark:hover:text-rose-400 disabled:opacity-30 transition-colors"
                                                 title="حذف"
                                             >
                                                 <Trash2 size={12} className="md:w-[14px] md:h-[14px]" />
@@ -219,10 +219,10 @@ export const ExpenseTable: React.FC<ExpenseTableProps> = ({
             </div>
 
             {/* Input Form Area - Clean Dashboard Style */}
-            <div id="draft-area" className="border-t border-slate-100 bg-white p-3 md:p-5 shadow-[0_-5px_25px_-5px_rgba(0,0,0,0.05)] z-20 flex-shrink-0 relative">
+            <div id="draft-area" className="border-t border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-800 p-3 md:p-5 shadow-[0_-5px_25px_-5px_rgba(0,0,0,0.05)] dark:shadow-[0_-5px_25px_-5px_rgba(0,0,0,0.2)] z-20 flex-shrink-0 relative">
                 {/* Header Indicator */}
-                <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white px-3 py-0.5 rounded-t-lg border-t border-x border-slate-100 shadow-sm hidden md:block">
-                    <span className={`text-[10px] font-bold ${isEditingId ? 'text-orange-500' : 'text-emerald-600'}`}>
+                <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-slate-800 px-3 py-0.5 rounded-t-lg border-t border-x border-slate-100 dark:border-slate-700 shadow-sm hidden md:block">
+                    <span className={`text-[10px] font-bold ${isEditingId ? 'text-orange-500 dark:text-orange-400' : 'text-emerald-600 dark:text-emerald-400'}`}>
                         {isEditingId ? '• جاري تعديل السطر •' : '• إضافة سطر جديد •'}
                     </span>
                 </div>
@@ -231,12 +231,12 @@ export const ExpenseTable: React.FC<ExpenseTableProps> = ({
                 <div className="flex items-center justify-between mb-3 md:hidden">
                     <div className="flex items-center gap-2">
                         <div className={`h-2 w-2 rounded-full ${isEditingId ? 'bg-orange-500' : 'bg-emerald-500'}`}></div>
-                        <h3 className="text-xs font-bold text-slate-700">
+                        <h3 className="text-xs font-bold text-slate-700 dark:text-slate-200">
                             {isEditingId ? 'تعديل السطر' : 'إضافة سطر جديد'}
                         </h3>
                     </div>
                     {isEditingId && (
-                        <button onClick={handleCancelEdit} className="text-[10px] text-rose-500 font-medium px-2 py-1 bg-rose-50 rounded-md">إلغاء التعديل</button>
+                        <button onClick={handleCancelEdit} className="text-[10px] text-rose-500 dark:text-rose-400 font-medium px-2 py-1 bg-rose-50 dark:bg-rose-900/30 rounded-md">إلغاء التعديل</button>
                     )}
                 </div>
 
@@ -284,7 +284,7 @@ export const ExpenseTable: React.FC<ExpenseTableProps> = ({
 
                         <div className="col-span-1 flex items-end">
                             {isEditingId && (
-                                <button onClick={handleCancelEdit} className="w-full h-9 text-xs font-bold text-slate-500 bg-slate-50 border border-slate-200 rounded-lg hover:bg-slate-100 transition-colors">إلغاء</button>
+                                <button onClick={handleCancelEdit} className="w-full h-9 text-xs font-bold text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-600 transition-colors">إلغاء</button>
                             )}
                         </div>
 
@@ -298,8 +298,8 @@ export const ExpenseTable: React.FC<ExpenseTableProps> = ({
 
                         <div className="col-span-2">
                             <div className="relative group">
-                                <span className="absolute top-2 left-2 text-[10px] text-slate-400 font-bold">ر.س</span>
-                                <input type="number" placeholder="المبلغ *" className={`${inputClass} ${withLeftIcon} text-blue-700 font-bold`} value={draft.amount || ''} onChange={e => handleDraftChange('amount', parseFloat(e.target.value))} />
+                                <span className="absolute top-2 left-2 text-[10px] text-slate-400 dark:text-slate-500 font-bold">ر.س</span>
+                                <input type="number" placeholder="المبلغ *" className={`${inputClass} ${withLeftIcon} text-blue-700 dark:text-blue-400 font-bold`} value={draft.amount || ''} onChange={e => handleDraftChange('amount', parseFloat(e.target.value))} />
                             </div>
                         </div>
 
@@ -338,8 +338,8 @@ export const ExpenseTable: React.FC<ExpenseTableProps> = ({
                         {/* Row 1: Amount & Reason */}
                         <div className="col-span-5">
                             <div className="relative">
-                                <span className="absolute top-2 left-2 text-[9px] text-slate-400 font-bold">ر.س</span>
-                                <input type="number" placeholder="المبلغ" className={`${inputClass} ${withLeftIcon} font-bold text-blue-700`} value={draft.amount || ''} onChange={e => handleDraftChange('amount', parseFloat(e.target.value))} />
+                                <span className="absolute top-2 left-2 text-[9px] text-slate-400 dark:text-slate-500 font-bold">ر.س</span>
+                                <input type="number" placeholder="المبلغ" className={`${inputClass} ${withLeftIcon} font-bold text-blue-700 dark:text-blue-400`} value={draft.amount || ''} onChange={e => handleDraftChange('amount', parseFloat(e.target.value))} />
                             </div>
                         </div>
                         <div className="col-span-7">
